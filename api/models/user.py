@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel
 
 
@@ -13,3 +13,9 @@ class User(BaseModel):
     country: Optional[str] = None
     phone_number: Optional[str] = None
     is_active: bool = True
+
+
+class UserResponse(BaseModel):
+    message: str
+    user_ids: List[int]
+    result: List[Dict[str, Any]]

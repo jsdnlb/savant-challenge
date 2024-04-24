@@ -7,9 +7,9 @@ import os
 def create_token(data: dict, time_expire: datetime | None = None):
     data_copy = data.copy()
     if time_expire is None:
-        expires = datetime.now() + timedelta(minutes=15)
+        expires = datetime.utcnow() + timedelta(minutes=15)
     else:
-        expires = datetime.now() + time_expire
+        expires = datetime.utcnow() + time_expire
     data_copy.update({"exp": expires})
     token_jwt = jwt.encode(data_copy, key=os.getenv("SECRET"), algorithm=ALGORITHM)
 
