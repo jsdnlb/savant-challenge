@@ -68,6 +68,7 @@ def patch_user_service(
 ):
     return patch_user(db, user_id, user_update)
 
+
 @router.delete("/users/{user_id}")
 def delete_user_service(
     user_id: int,

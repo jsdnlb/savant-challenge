@@ -4,6 +4,7 @@ from passlib.context import CryptContext
 from fastapi import HTTPException
 from api.db.models import User, UserView
 from api.schemas.user import UserResponse, UserSchema, UserUpdateSchema
+from api.utils.exception_handler import exception_handler
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -18,7 +19,7 @@ def get_all_users(db: Session, skip: int, limit: int) -> UserResponse:
 def get_user_id(db: Session, user_id: int):
     _user = db.query(User).filter(User.id == user_id).first()
     if not _user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise exception_handler("404_NOT_FOUND")
     return _user
 
 
@@ -32,10 +33,10 @@ def create_user(db: Session, user: UserSchema):
         return _user
     except IntegrityError as e:
         db.rollback()
-        raise HTTPException(status_code=400, detail="Username or email already exists")
+        raise exception_handler("400_ERROR_FIELDS")
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise exception_handler("500_CREATE")
     finally:
         db.refresh(_user)
 
@@ -49,7 +50,7 @@ def update_user(db: Session, user_id: int, user_update: UserUpdateSchema):
         db.commit()
     except IntegrityError as e:
         db.rollback()
-        raise HTTPException(status_code=400, detail="Username or email already exists")
+        raise exception_handler("400_ERROR_FIELDS")
     finally:
         db.refresh(_user)
 
