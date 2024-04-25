@@ -16,6 +16,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.title = "Challenge Savant - Swagger UI"
+app.version = "0.1"
+
 
 @app.exception_handler(404)
 def not_found(request, exc):
