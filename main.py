@@ -23,7 +23,7 @@ def not_found(request, exc):
 
 
 app.include_router(users.router, prefix="/api")
-app.include_router(auth.router, prefix="/api")
+app.include_router(auth.router)
 
 
 if __name__ == "__main__":

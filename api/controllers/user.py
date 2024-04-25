@@ -30,6 +30,7 @@ def create_user(db: Session, user: UserSchema):
         _user.hashed_password = hash
         db.add(_user)
         db.commit()
+        db.refresh(_user)
         return _user
     except IntegrityError as e:
         db.rollback()
@@ -37,8 +38,6 @@ def create_user(db: Session, user: UserSchema):
     except Exception as e:
         db.rollback()
         raise exception_handler("500_CREATE")
-    finally:
-        db.refresh(_user)
 
 
 def update_user(db: Session, user_id: int, user_update: UserUpdateSchema):
@@ -48,11 +47,10 @@ def update_user(db: Session, user_id: int, user_update: UserUpdateSchema):
         setattr(_user, field, value)
     try:
         db.commit()
+        db.refresh(_user)
     except IntegrityError as e:
         db.rollback()
         raise exception_handler("400_ERROR_FIELDS")
-    finally:
-        db.refresh(_user)
 
     return _user
 
