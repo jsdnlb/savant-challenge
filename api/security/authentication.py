@@ -2,10 +2,11 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from api.utils.exception_handler import exception_handler
-from core.config import SECRET, ALGORITHM
+from core.config import ALGORITHM
 from passlib.context import CryptContext
 from api.db.models import User
 from api.db.database import SessionLocal
+import os
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -24,11 +25,11 @@ async def authenticate_user(username: str, password: str):
 
 
 def get_user_current(token: str = Depends(oauth2_scheme)):
-    token_decode = jwt.decode(token, key=[SECRET], algorithms=[ALGORITHM])
+    token_decode = jwt.decode(token, os.getenv("SECRET"), algorithms=[ALGORITHM])
     username = token_decode.get("sub")
 
     try:
-        token_decode = jwt.decode(token, key=[SECRET], algorithms=[ALGORITHM])
+        token_decode = jwt.decode(token, os.getenv("SECRET"), algorithms=[ALGORITHM])
         username = token_decode.get("sub")
         if username == None:
             raise exception_handler("401_INVALID_CREDENTIALS")
