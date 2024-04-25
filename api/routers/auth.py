@@ -1,7 +1,8 @@
 from datetime import timedelta
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from api.security.authentication import authenticate_user, create_token
+from api.security.authentication import authenticate_user
+from api.security.token import create_token
 
 router = APIRouter()
 
